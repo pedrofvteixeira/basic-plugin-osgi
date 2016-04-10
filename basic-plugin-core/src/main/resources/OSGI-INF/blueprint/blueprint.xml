@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+           xsi:schemaLocation="
+                http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+                http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd"
+           default-timeout="20000"
+           default-activation="lazy">
+
+    <!-- ================================================================================================== -->
+    <!-- Configuration settings                                                                             -->
+    <!-- ================================================================================================== -->
+
+    <cm:property-placeholder persistent-id="basic.plugin" update-strategy="reload">
+        <cm:default-properties>
+
+            <!-- plugin id ( non-updatable property ) -->
+            <cm:property name="plugin.id" value="basic-plugin" />
+
+            <!-- updatable properties ( via karaf/etc/basic.plugin.cfg ) listed below -->
+
+            <cm:property name="extension" value="properties" />
+            <cm:property name="mimeType" value="text/plain" />
+            <cm:property name="saySomething" value="Hello World!" />
+
+        </cm:default-properties>
+    </cm:property-placeholder>
+
+
+    <!-- ================================================================================================== -->
+    <!-- ( Useful ) Reusable bean declarations                                                              -->
+    <!-- ================================================================================================== -->
+
+    <!-- declared in pentahoObject.spring.xml -->
+    <!-- 'reference' would be the equivalent of a (non-osgi) 'pen:bean' call -->
+    <reference id="repository" availability="optional" timeout="5000"
+               interface="org.pentaho.platform.api.repository2.unified.IUnifiedRepository" />
+
+
+    <bean id="bp.settings" class="pt.webdetails.basic.plugin.BasicPluginSettings" activation="eager">
+        <property name="extension" value="${extension}" />
+        <property name="mimeType" value="${mimeType}" />
+        <property name="saySomething" value="${saySomething}" />
+    </bean>
+
+   
+
+
+</blueprint>

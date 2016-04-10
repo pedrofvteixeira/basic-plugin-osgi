@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.2.1" name="basic-plugin">
+    <feature name="basic-plugin" version="${project.version}" description="Pentaho Basic Plugin OSGi">
+        <details>Pentaho Basic Plugin OSGi</details>
+
+        <configfile finalname="/etc/basic.plugin.cfg">
+            mvn:pentaho/basic-plugin-core/${project.version}/cfg/basic-plugin-config
+        </configfile>
+
+        <bundle>mvn:pentaho/basic-plugin-api/${project.version}</bundle>
+        <bundle>mvn:pentaho/basic-plugin-core/${project.version}</bundle>
+    </feature>
+</features>

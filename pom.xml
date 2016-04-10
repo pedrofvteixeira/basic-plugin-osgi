@@ -1,0 +1,103 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+   
+  <parent>
+    <groupId>org.pentaho</groupId>
+    <artifactId>pentaho-ce-jar-parent-pom</artifactId>
+    <version>1.0.13</version>
+  </parent>
+
+  <groupId>pentaho</groupId>
+  <artifactId>basic-plugin-parent-pom</artifactId>
+  <version>7.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>Basic Plugin parent pom</name>
+  <description>Basic Plugin parent pom</description>
+  <url>http://www.pentaho.com/</url>
+
+  <properties>
+
+    <!-- project version -->
+    <basic.plugin.version>7.0-SNAPSHOT</basic.plugin.version>
+
+    <!-- platform dependencies -->
+    <dependency.pentaho.platform.version>${project.version}</dependency.pentaho.platform.version>
+    <dependency.karaf.version>3.0.3</dependency.karaf.version>
+
+    <!-- maven plugin dependencies -->
+
+    <plugin.org.codehaus.mojo.build-helper-maven-plugin.version>1.9.1</plugin.org.codehaus.mojo.build-helper-maven-plugin.version>
+    <plugin.org.apache.maven.plugins.maven-bundle-plugin.version>2.5.3</plugin.org.apache.maven.plugins.maven-bundle-plugin.version>
+
+    <!-- external dependencies -->
+    
+
+  </properties>
+
+  <profiles>
+  </profiles>
+
+  <dependencyManagement>
+
+    <dependencies>
+    </dependencies>
+
+  </dependencyManagement>
+
+  <build>
+
+    <finalName>${project.artifactId}</finalName>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>${plugin.org.codehaus.mojo.build-helper-maven-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <version>${plugin.org.apache.maven.plugins.maven-bundle-plugin.version}</version>
+          <extensions>true</extensions>
+          <configuration>
+            <instructions>
+              <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+              <Bundle-Version>${project.version}</Bundle-Version>
+            </instructions>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.karaf.tooling</groupId>
+          <artifactId>karaf-maven-plugin</artifactId>
+          <version>${dependency.karaf.version}</version>
+          <extensions>true</extensions>
+          <configuration>
+            <aggregateFeatures>true</aggregateFeatures>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+            <testFailureIgnore>false</testFailureIgnore>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+  </build>
+
+  <modules>
+
+    <module>basic-plugin-api</module>
+    <module>basic-plugin-core</module>
+    <module>basic-plugin-assembly</module>
+
+  </modules>
+
+</project>
