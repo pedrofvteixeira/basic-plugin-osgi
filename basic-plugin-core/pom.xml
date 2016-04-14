@@ -39,9 +39,21 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>pentaho</groupId>
+      <artifactId>pentaho-platform-core</artifactId>
+      <version>${dependency.pentaho.platform.version}</version>
+      <scope>provided</scope>
+    </dependency>
     
     <!-- other dependencies -->
 
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>${dependency.javax.servlet.version}</version>
+      <scope>provided</scope>
+    </dependency>
 
   </dependencies>
 

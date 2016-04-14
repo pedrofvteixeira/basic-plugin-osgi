@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+           xsi:schemaLocation="
+                http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+                http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd"
+           default-timeout="20000"
+           default-activation="lazy">
+
+
+    <!-- =================================== -->
+    <!-- Content Generators                  -->
+    <!-- =================================== -->
+
+    <!-- register a IContentGenerator implementation for all default 'OPEN' actions ( /generatedContent ) -->
+    <!-- 'service' would be the equivalent of a (non-osgi) 'pen:publish' call -->
+    <service ref="bp.properties" interface="org.pentaho.platform.api.engine.IContentGenerator" activation="eager">
+        <service-properties>
+            <entry key="plugin-id" value="${plugin.id}" />
+            <!-- this will handle all default /generatedContent for this content type -->
+            <entry key="content-type" value="${extension}" />
+        </service-properties>
+    </service>
+
+    <bean id="bp.properties" class="pt.webdetails.basic.plugin.BasicPluginContentGenerator">
+        <argument ref="bp.settings" />
+        <argument ref="repository" />
+    </bean>
+
+
+
+    <!-- register specific IContentGenerator implementation; this one handles the 'EDIT' action -->
+    <!-- 'service' would be the equivalent of a (non-osgi) 'pen:publish' call -->
+    <service ref="bp.properties.edit" interface="org.pentaho.platform.api.engine.IContentGenerator" activation="eager">
+        <service-properties>
+            <entry key="plugin-id" value="${plugin.id}" />
+            <!-- the selected 'EDIT' action perspective ID gets placed as the content type -->
+            <entry key="content-type" value="${edit.perspective}" />
+        </service-properties>
+    </service>
+
+    <bean id="bp.properties.edit" class="pt.webdetails.basic.plugin.BasicPluginContentGenerator">
+        <argument ref="bp.settings" />
+        <argument ref="repository" />
+        <property name="editMode" value="true" />
+    </bean>
+
+</blueprint>

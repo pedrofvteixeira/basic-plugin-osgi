@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+           xsi:schemaLocation="
+                http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+                http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd"
+           default-timeout="20000"
+           default-activation="lazy">
+
+
+    <!-- =================================== -->
+    <!-- Content Types                       -->
+    <!-- =================================== -->
+
+    <!-- 'service' would be the equivalent of a (non-osgi) 'pen:publish' call -->
+    <service ref="bp.contentInfo.properties" interface="org.pentaho.platform.api.engine.IContentInfo" activation="eager">
+        <service-properties>
+            <entry key="plugin-id" value="${plugin.id}" />
+            <entry key="extension" value="${extension}" />
+        </service-properties>
+    </service>
+
+    <!-- IContentInfo implementation that will carry the file extension, mimeType and respective configured actions -->
+    <!-- Similar to declaring it via <content-type> tag in plugin.xml, in non-OSGi platform plugins -->
+    <bean id="bp.contentInfo.properties" class="pt.webdetails.basic.plugin.platform.api.impl.BasicPluginContentInfo">
+
+        <!-- the file extension we'll become responsible for -->
+        <property name="extension" value="${extension}" />
+
+        <!-- the file extension's mimeType -->
+        <property name="mimeType" value="${mimeType}" />
+
+        <!-- the set of available operations for this file extension ( OPEN, EDIT, SCHEDULE, ... ) -->
+        <property name="operations">
+
+            <list value-type="org.pentaho.platform.api.engine.IPluginOperation">
+
+                <!-- 'OPEN' action -->
+                <bean class="org.pentaho.platform.engine.core.solution.PluginOperation">
+                    <argument value="RUN" />
+                    <!-- no perspective set: defaults to 'generatedContent' -->
+                </bean>
+
+                <!-- 'EDIT' action -->
+                <bean class="org.pentaho.platform.engine.core.solution.PluginOperation">
+                    <argument value="EDIT" />
+                    <!-- "perspective" maps out to 'content-type' service property      -->
+                    <!-- The following lookup logic is used ( by this order ): 			-->
+                    <!-- (1) <file-extension> + <dot> + <perspective>  					-->
+                    <!-- (2) <perspective> 												-->
+                    <property name="perspective" value="${edit.perspective}" />
+                </bean>
+
+            </list>
+        </property>
+    </bean>
+
+
+</blueprint>

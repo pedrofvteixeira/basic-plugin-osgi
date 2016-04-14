@@ -32,6 +32,8 @@
     <plugin.org.apache.maven.plugins.maven-bundle-plugin.version>2.5.3</plugin.org.apache.maven.plugins.maven-bundle-plugin.version>
 
     <!-- external dependencies -->
+
+    <dependency.javax.servlet.version>3.0.1</dependency.javax.servlet.version>
     
 
   </properties>
