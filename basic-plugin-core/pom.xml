@@ -45,6 +45,19 @@
       <version>${dependency.pentaho.platform.version}</version>
       <scope>provided</scope>
     </dependency>
+
+    <dependency>
+      <groupId>pentaho</groupId>
+      <artifactId>pentaho-platform-extensions</artifactId>
+      <version>${dependency.pentaho.platform.version}</version>
+      <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.xbean</groupId>
+          <artifactId>xbean</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
     
     <!-- other dependencies -->
 

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+           xsi:schemaLocation="
+                http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+                http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd"
+           default-timeout="20000"
+           default-activation="lazy">
+
+
+    <!-- register a IPlatformPlugin implementation -->
+    <service ref="bp.ext.resources" interface="org.pentaho.platform.api.engine.IPlatformPlugin" activation="eager">
+        <service-properties>
+            <entry key="plugin-id" value="${plugin.id}" />
+        </service-properties>
+    </service>
+
+
+
+    <bean id="bp.ext.resources" class="pt.webdetails.basic.plugin.platform.api.impl.BasicPluginPlatformPlugin" depends-on="bp.cl">
+        <property name="id" value="${plugin.id}" />
+
+        <!-- =================================== -->
+        <!-- External Resources                  -->
+        <!-- =================================== -->
+
+        <property name="externalResourcesMap">
+            <map key-type="java.lang.String" value-type="java.util.List">
+
+                <!-- a couple of contexts: global, mantle, requirejs, analyzer, ...  -->
+                <!-- we'll leverage on our already registered static resource endpoints -->
+                <entry key="mantle">
+                    <list value-type="java.lang.String">
+                        <value>osgi/${plugin.id}/resources/basic-plugin-startup.js</value>
+                    </list>
+                </entry>
+
+            </map>
+        </property>
+
+    </bean>
+
+
+    <!-- =================================== -->
+    <!-- Register a CL for this plugin       -->
+    <!-- =================================== -->
+
+    <bean id="bp.cl" class="pt.webdetails.basic.plugin.BasicPluginClassLoaderInitializer"
+          init-method="init" destroy-method="destroy" />
+
+
+</blueprint>
