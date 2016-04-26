@@ -55,6 +55,13 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.ops4j.pax.web</groupId>
+      <artifactId>pax-web-spi</artifactId>
+      <version>${dependency.ops4j.pax.web.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
