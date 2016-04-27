@@ -75,6 +75,13 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>javax.ws.rs-api</artifactId>
+      <version>${dependency.javax.rs.ws.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -89,6 +96,14 @@
             <Bundle-SymbolicName>
               ${project.artifactId}
             </Bundle-SymbolicName>
+
+            <!-- http://stackoverflow.com/questions/31889967/jboss-fuse-6-2-rest-cxf-org-apache-cxf-service-factory-serviceconstructionexcept#answers -->
+            <Import-Package>
+              javax.ws.rs;version="[2.0,3)",
+              javax.ws.rs.core;version="[2.0,3)",
+              *
+            </Import-Package>
+
           </instructions>
         </configuration>
       </plugin>

@@ -36,6 +36,7 @@
     <dependency.javax.servlet.version>3.0.1</dependency.javax.servlet.version>
     <dependency.ops4j.pax.web.version>3.1.4</dependency.ops4j.pax.web.version>
     
+    <dependency.javax.rs.ws.version>2.0</dependency.javax.rs.ws.version>
 
   </properties>
 
