@@ -24,6 +24,13 @@
             <cm:property name="mimeType" value="text/plain" />
             <cm:property name="saySomething" value="Hello World!" />
 
+            <cm:property name="overlay.type" value="BUTTON_CREATE_NEW" />
+            <cm:property name="overlay.id" value="launch" />
+            <cm:property name="overlay.item.id" value="launch" />
+            <cm:property name="overlay.command.id" value="Basic Plugin" />
+            <cm:property name="overlay.command.label" value="Create a New Basic Plugin" />
+            <cm:property name="overlay.command.uri" value="osgi/basic-plugin/resources/hello-world.properties" />
+
         </cm:default-properties>
     </cm:property-placeholder>
 

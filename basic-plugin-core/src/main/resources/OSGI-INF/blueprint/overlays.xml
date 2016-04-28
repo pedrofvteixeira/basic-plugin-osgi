@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+           xsi:schemaLocation="
+                http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+                http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd"
+           default-timeout="20000"
+           default-activation="lazy">
+
+    <!-- =================================== -->
+    <!-- Overlays                            -->
+    <!-- =================================== -->
+
+    <!-- 'service' would be the equivalent of a (non-osgi) 'pen:publish' call -->
+    <service interface="org.pentaho.ui.xul.XulOverlay" activation="eager">
+        <service-properties>
+            <entry key="plugin-id" value="${plugin.id}" />
+        </service-properties>
+        <bean factory-ref="factory.overlay" factory-method="build" />
+    </service>
+
+    <bean id="factory.overlay" class="pt.webdetails.basic.plugin.XulOverlayFactory" >
+        <argument value="${overlay.type}" />
+        <property name="resourceBundleUri" value="osgi/${plugin.id}/lang/messages" />
+        <property name="overlayId" value="${overlay.id}" />
+        <property name="itemId" value="${overlay.item.id}" />
+        <property name="commandId" value="${overlay.command.id}" />
+        <property name="commandLabel" value="${overlay.command.label}" />
+        <property name="commandUri" value="${overlay.command.uri}" />
+    </bean>
+
+
+
+</blueprint>
