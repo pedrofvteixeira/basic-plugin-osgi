@@ -31,6 +31,7 @@
             <cm:property name="overlay.command.label" value="Create a New Basic Plugin" />
             <cm:property name="overlay.command.uri" value="osgi/basic-plugin/resources/hello-world.properties" />
 
+            <cm:property name="perspective.title" value="Basic Plugin" />
         </cm:default-properties>
     </cm:property-placeholder>
 
