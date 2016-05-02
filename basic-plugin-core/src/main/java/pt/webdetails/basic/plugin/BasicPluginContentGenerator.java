@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 public class BasicPluginContentGenerator implements IContentGenerator {
 
   private static Logger logger = LoggerFactory.getLogger( BasicPluginContentGenerator.class );
-  private static final String PATH_PARAMETER_ID = "path";
+  protected static final String PATH_PARAMETER_ID = "path";
 
   protected String instanceId;
 
@@ -221,7 +221,7 @@ public class BasicPluginContentGenerator implements IContentGenerator {
     return ( HttpServletResponse ) parameterProviders.get( PATH_PARAMETER_ID ).getParameter( "httpresponse" );
   }
 
-  private void writeOutAndFlush( OutputStream out, InputStream data ) {
+  protected void writeOutAndFlush( OutputStream out, InputStream data ) {
     try {
       IOUtils.copy( data, out );
       out.flush();
@@ -230,7 +230,7 @@ public class BasicPluginContentGenerator implements IContentGenerator {
     }
   }
 
-  private IUnifiedRepository safeSetUnifiedRepository( IUnifiedRepository repository ) {
+  protected IUnifiedRepository safeSetUnifiedRepository( IUnifiedRepository repository ) {
 
     try {
 

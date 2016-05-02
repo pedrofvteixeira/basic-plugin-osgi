@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+           xsi:schemaLocation="
+                http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+                http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0 http://aries.apache.org/schemas/blueprint-cm/blueprint-cm-1.1.0.xsd"
+           default-timeout="20000"
+           default-activation="lazy">
+
+    <!-- =================================== -->
+    <!-- Dedicated configuration settings    -->
+    <!-- =================================== -->
+
+    <!-- disambiguate between the two property-placeholder definitions by assigning a unique placeholder prefix/suffix -->
+    <cm:property-placeholder persistent-id="dedicated.basic.plugin" placeholder-prefix="$[" placeholder-suffix="]">
+        <cm:default-properties>
+
+            <cm:property name="dedicated.extension" value="bp" />
+            <cm:property name="dedicated.mimeType" value="text/plain" />
+
+            <cm:property name="dedicated.open.perspective" value="open-me" />
+            <cm:property name="dedicated.edit.perspective" value="edit-me" />
+
+        </cm:default-properties>
+    </cm:property-placeholder>
+
+
+    <!-- ======================================================== -->
+    <!-- Dedicated content type: a whole new file extension '.bp' -->
+    <!-- ======================================================== -->
+
+    <!-- 'service' would be the equivalent of a (non-osgi) 'pen:publish' call -->
+    <service ref="bp.dedicated.contentInfo" interface="org.pentaho.platform.api.engine.IContentInfo" activation="eager">
+        <service-properties>
+            <entry key="plugin-id" value="${plugin.id}" />
+            <entry key="extension" value="$[dedicated.extension]" />
+        </service-properties>
+    </service>
+
+    <!-- IContentInfo implementation that will carry the file extension, mimeType and respective configured actions -->
+    <!-- Similar to declaring it via <content-type> tag in plugin.xml, in non-OSGi platform plugins -->
+    <bean id="bp.dedicated.contentInfo" class="pt.webdetails.basic.plugin.platform.api.impl.BasicPluginContentInfo">
+
+        <!-- the file extension we'll become responsible for -->
+        <property name="extension" value="$[dedicated.extension]" />
+
+        <!-- the file extension's mimeType -->
+        <property name="mimeType" value="$[dedicated.mimeType]" />
+
+        <!-- the set of available operations for this file extension ( OPEN, EDIT, SCHEDULE, ... ) -->
+        <property name="operations">
+
+            <list value-type="org.pentaho.platform.api.engine.IPluginOperation">
+
+                <!-- 'OPEN' action -->
+                <bean class="org.pentaho.platform.engine.core.solution.PluginOperation">
+                    <argument value="RUN" />
+                    <property name="perspective" value="$[dedicated.open.perspective]" />
+                </bean>
+
+                <!-- 'EDIT' action -->
+                <bean class="org.pentaho.platform.engine.core.solution.PluginOperation">
+                    <argument value="EDIT" />
+                    <!-- "perspective" maps out to 'content-type' service property      -->
+                    <!-- The following lookup logic is used ( by this order ): 			-->
+                    <!-- (1) <file-extension> + <dot> + <perspective>  					-->
+                    <!-- (2) <perspective> 												-->
+                    <property name="perspective" value="$[dedicated.edit.perspective]" />
+                </bean>
+
+            </list>
+        </property>
+    </bean>
+
+
+    <!-- =================================== -->
+    <!-- Dedicated content generators        -->
+    <!-- =================================== -->
+
+    <!-- register a base IContentGenerator implementation -->
+    <!-- 'service' would be the equivalent of a (non-osgi) 'pen:publish' call -->
+    <service ref="bp.open.dedicated" interface="org.pentaho.platform.api.engine.IContentGenerator" activation="eager">
+        <service-properties>
+            <entry key="plugin-id" value="${plugin.id}" />
+            <entry key="content-type" value="$[dedicated.extension]" />
+        </service-properties>
+    </service>
+
+    <!-- register a IContentGenerator implementation for the 'OPEN' perspective -->
+    <!-- 'service' would be the equivalent of a (non-osgi) 'pen:publish' call -->
+    <service ref="bp.open.dedicated" interface="org.pentaho.platform.api.engine.IContentGenerator" activation="eager">
+        <service-properties>
+            <entry key="plugin-id" value="${plugin.id}" />
+            <entry key="content-type" value="$[dedicated.open.perspective]" />
+        </service-properties>
+    </service>
+
+    <bean id="bp.open.dedicated" class="pt.webdetails.basic.plugin.dedicated.BasicPluginDedicatedContentGenerator">
+        <argument ref="bp.settings" />
+        <argument ref="repository" />
+        <argument value="$[dedicated.extension]" />
+        <argument value="$[dedicated.mimeType]" />
+    </bean>
+
+
+    <!-- register a IContentGenerator implementation; this one handles the 'EDIT' action -->
+    <!-- 'service' would be the equivalent of a (non-osgi) 'pen:publish' call -->
+    <service ref="bp.edit.dedicated" interface="org.pentaho.platform.api.engine.IContentGenerator" activation="eager">
+        <service-properties>
+            <entry key="plugin-id" value="${plugin.id}" />
+            <!-- the selected 'EDIT' action perspective ID gets placed as the content type -->
+            <entry key="content-type" value="$[dedicated.edit.perspective]" />
+        </service-properties>
+    </service>
+
+    <bean id="bp.edit.dedicated" class="pt.webdetails.basic.plugin.dedicated.BasicPluginDedicatedContentGenerator">
+        <argument ref="bp.settings" />
+        <argument ref="repository" />
+        <argument value="$[dedicated.extension]" />
+        <argument value="$[dedicated.mimeType]" />
+        <property name="editMode" value="true" />
+    </bean>
+
+    <!-- ========================================= -->
+    <!-- Dedicated ImportHandler                   -->
+    <!-- ========================================= -->
+
+    <!-- 1) IMimeType implementation  for the new 'application/vnd.basic.plugin' -->
+    <bean id="bp.mimeType" class="org.pentaho.platform.core.mimetype.MimeType">
+        <argument value="application/vnd.basic.plugin" />
+        <argument>
+            <list>
+                <!-- adding .bp ( 'B'asic 'P'lugin ) file extension -->
+                <!-- ( nothing more that a plain .txt file that we rename to a .bp extension ) -->
+                <value>bp</value>
+                <!-- add more file extensions here -->
+            </list>
+        </argument>
+        <property name="converter">
+            <!-- defined in importExport.xml (non-osgi side) -->
+            <!-- 'reference' would be the equivalent of a (non-osgi) 'pen:bean' call -->
+            <reference interface="org.pentaho.platform.api.repository2.unified.Converter" filter="(id=streamConverter)"/>
+        </property>
+    </bean>
+
+
+    <!-- 2) IPlatformImportHandler for the new MimeType 'application/vnd.basic.plugin' -->
+    <!-- ( we'll just use the platform's standard importHandler, but we could've also implemented our own IPlatformImportHandler ) -->
+    <bean id="bp.importHandler" class="pt.webdetails.basic.plugin.dedicated.BasicPluginImportHandler">
+        <argument>
+            <list value-type="org.pentaho.platform.api.mimetype.IMimeType">
+                <ref component-id="bp.mimeType" />
+                <!-- add more mimeTypes here -->
+            </list>
+        </argument>
+        <property name="repository" ref="repository" />
+        <property name="defaultAclHandler">
+            <bean class="org.pentaho.platform.repository2.unified.jcr.InheritDefaultAclHandler" /> <!-- we'll use the default acl handler -->
+        </property>
+    </bean>
+
+
+    <!-- 3) A util bean that simply registers all importHandlers / mimeTypes declared here into the Pentaho platform -->
+    <bean class="pt.webdetails.basic.plugin.dedicated.BasicPluginContentTypeRegister" init-method="start" activation="eager">
+        <property name="importHandlers">
+            <list value-type="org.pentaho.platform.plugin.services.importer.IPlatformImportHandler">
+                <ref component-id="bp.importHandler" />
+                <!-- add more importHandlers here -->
+            </list>
+        </property>
+        <property name="mimeTypeResolvers">
+            <list value-type="org.pentaho.platform.api.mimetype.IMimeType">
+                <ref component-id="bp.mimeType" />
+                <!-- add more mimeTypes here -->
+            </list>
+        </property>
+    </bean>
+
+
+</blueprint>
