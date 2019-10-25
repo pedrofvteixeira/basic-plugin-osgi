@@ -14,10 +14,6 @@ The first thing you should do is to confirm you have maven installed ( https://m
 To prep the project, you first need to resolve/include the necessary dependencies.
 pom.xml file contains a list of the dependencies needed to successfully compile this project.
 
-### To fetch dependencies
-
-From the project root and using command-line simply type *mvn resolve*
-
 
 How to use
 ----------
@@ -26,7 +22,7 @@ Following this steps should get you going:
 
 ### Compile the project
 
-Just run *mvn package* and you should be all set
+Just run *mvn package* and you should be all set (please ignore all warning messages displayed in console during this execution, mvn will eventually finish, this is a known issue)
 
 
 ### Deploying the plugin in your pentaho environment
@@ -34,5 +30,7 @@ Just run *mvn package* and you should be all set
 Copy the .kar file in ./basic-plugin-assembly/target folder and drop it at 
 
 pentaho-solutions/system/karaf/deploy
+
+(There is a know issue during new file upload on Browse view, an error will occur on server's console, even so the file will be correctly uploaded)
 
 

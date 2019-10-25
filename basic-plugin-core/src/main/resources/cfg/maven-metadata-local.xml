@@ -2,7 +2,7 @@
 <metadata modelVersion="1.1.0">
   <groupId>pentaho</groupId>
   <artifactId>basic-plugin-core</artifactId>
-  <version>7.0-SNAPSHOT</version>
+  <version>9.0.0.0-SNAPSHOT</version>
   <versioning>
     <snapshot>
       <localCopy>true</localCopy>
@@ -12,7 +12,7 @@
       <snapshotVersion>
         <classifier>basic-plugin-config</classifier>
         <extension>cfg</extension>
-        <value>7.0-SNAPSHOT</value>
+        <value>9.0.0.0-SNAPSHOT</value>
         <updated>20160410200841</updated>
       </snapshotVersion>
     </snapshotVersions>
